@@ -23,6 +23,7 @@ class Customers extends CI_Controller {
 		foreach ($list as $customers) {
 			$no++;
 			$row = array();
+			$row[] = '<td><input type="checkbox" class="checks" name="check[]" value='."$customers->id".'></td>';
 			$row[] = $no;
 			$row[] = $customers->name;
 			$row[] = $customers->email;
@@ -43,13 +44,31 @@ class Customers extends CI_Controller {
 		}
 
 		$output = array(
-						"draw" => $_POST['draw'],
-						"recordsTotal" => $this->customers->count_all(),
-						"recordsFiltered" => $this->customers->count_filtered(),
-						"data" => $data,
-				);
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->customers->count_all(),
+			"recordsFiltered" => $this->customers->count_filtered(),
+			"data" => $data,
+		);
 		//output to json format
 		echo json_encode($output);
+	}
+
+	public function delete_selected_item()
+	{
+		$id = $this->input->post('id');
+		$implode = explode(" ",$id);
+		foreach ($implode as $value) {
+			$this->db->where('id',$value);
+			$query = $this->db->update('admin',['status'=>5]);
+		}
+
+		if($query)
+		{
+			echo json_encode(['msg'=>'Data deleted successfully of '.count($implode).' Candidates']);
+		}else{
+			echo json_encode(['msg'=>'Some thing is wrong!']);
+		}
+		
 	}
 
 }

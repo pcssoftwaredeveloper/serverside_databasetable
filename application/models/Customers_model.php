@@ -58,6 +58,7 @@ class Customers_model extends CI_Model {
 		$this->_get_datatables_query();
 		if($_POST['length'] != -1)
 		$this->db->limit($_POST['length'], $_POST['start']);
+		$this->db->where('status !=',5);
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -65,6 +66,7 @@ class Customers_model extends CI_Model {
 	function count_filtered()
 	{
 		$this->_get_datatables_query();
+		$this->db->where('status !=',5);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
@@ -72,6 +74,7 @@ class Customers_model extends CI_Model {
 	public function count_all()
 	{
 		$this->db->from($this->table);
+		$this->db->where('status !=',5);
 		return $this->db->count_all_results();
 	}
 
