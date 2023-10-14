@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz Timer</title>
+</head>
+<body>
+  <div id="timer">Time: <span id="countdown">60</span> seconds</div>
+  <button id="startButton">Start Quiz</button>
+
+  <script>
+
+    let timer; // variable to hold the timer ID
+    let countdownElement = document.getElementById("countdown");
+    let startButton = document.getElementById("startButton");
+	let seconds;
+    function startQuiz() {
+      let leftTime = window.localStorage.getItem('lefttime'); 
+      if(leftTime !="" && leftTime !=null && leftTime !=0)
+      {
+      	seconds = leftTime;
+      }else{
+      	seconds = 120;
+      }
+      console.log(leftTime);
+       // Set the countdown time in seconds
+
+      // Display the initial time
+      countdownElement.textContent = seconds;
+
+      // Disable the start button
+      startButton.disabled = true;
+
+      // Function to update the timer and check for the end of the quiz
+      function updateTimer() {
+        seconds--;
+        let minutes = Math.floor(seconds / 60); // Get the whole minutes
+		let remainingSeconds = seconds % 60; // Get the remaining seconds
+
+		// Format the result as "M:SS" (e.g., "1:20")
+		let timeFormatted = minutes + ":" + (remainingSeconds < 10 ? "0" : "") + remainingSeconds;
+        // Update the countdown display
+        countdownElement.textContent = timeFormatted;
+        console.log(minutes);
+        // Check if the timer has reached 0
+        if (seconds === 0) {
+        	window.localStorage.removeItem("lefttime");
+          clearInterval(timer);
+          alert("Time's up! Quiz is over.");
+          startButton.disabled = false; // Re-enable the start button
+        }else{
+        	window.localStorage.setItem('lefttime',seconds);
+        }
+      }
+
+      // Start the timer and repeat the update function every second
+      timer = setInterval(updateTimer, 1000); 
+    }
+
+    startButton.addEventListener("click", startQuiz);
+    window.onload = startQuiz();
+
+  </script>
+</body>
+</html>
